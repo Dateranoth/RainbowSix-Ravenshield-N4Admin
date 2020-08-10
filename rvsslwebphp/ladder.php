@@ -86,8 +86,8 @@ echo "<br><a class=nav href=\"ladder.php?mode=".$mode."&server=All\">".$text_all
 echo "</td></tr>";
 require("ladder_update.php");
 $countrows="Select ".$writeladdertable.".id from ".$writeladdertable." LEFT JOIN ".$Playertable." ON (".$writeladdertable.".fromid = ".$Playertable.".id) WHERE ".$Playertable.".serverident LIKE '".$serverident."' and ".$Playertable.".ubiname<>'' ";
-$countedrows=mysql_query ($countrows);
-$ranked=mysql_num_rows($countedrows);
+$countedrows=mysqli_query ($db,$countrows);
+$ranked=mysqli_num_rows($countedrows);
 if ($ranked>0)
 {
 	if (!isset($site))
@@ -123,9 +123,9 @@ if ($ranked>0)
 
 	echo "<table border=0 cellspacing=0 width=".$swidth."><tr>";
 	$look="Select ".$writeladdertable.".score,".$Playertable.".ubiname,".$Playertable.".serverident FROM ".$writeladdertable." LEFT JOIN ".$Playertable." ON (".$writeladdertable.".fromid = ".$Playertable.".id) WHERE ".$Playertable.".serverident LIKE '".$serverident."' and ".$Playertable.".ubiname<>'' ORDER BY score DESC LIMIT ".$displayglobalranksonsite*($site-1).",".$displayglobalranksonsite."";
-	$looked=mysql_query ($look);
+	$looked=mysqli_query ($db,$look);
 	if ($serverident=="%"){$smode="rand";}else{$smode="randende";}
-	while ($place=mysql_fetch_array($looked, MYSQL_ASSOC))
+	while ($place=mysqli_fetch_array($looked, MYSQL_ASSOC))
 	{
 		$i++;
 		echo "<td class=rand width=\"10%\" align=center>";

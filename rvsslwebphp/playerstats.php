@@ -160,8 +160,8 @@ if ($nicksearch!="")
 	}
 	echo "</td><td align=right class=bigheader background=\"images/".$design[$dset]."_header.gif\">".$text_site.":".$site."&nbsp;</td></tr>";
 
-	$searchnick=mysql_query ("SELECT ".$Nicktable.".nick as nick FROM ".$Nicktable." LEFT JOIN ".$Playertable." ON (".$Nicktable.".fromid = ".$Playertable.".id) WHERE ".$Nicktable.".nick like '".$nicksearchencoded."' and ".$Playertable.".ubiname <> '' and ".$Nicktable.".nick <>'' and ".$Playertable.".serverident like '".$serverident."' ORDER BY nick");
-	$nickcount=mysql_num_rows($searchnick);
+	$searchnick=mysqli_query ($db,"SELECT ".$Nicktable.".nick as nick FROM ".$Nicktable." LEFT JOIN ".$Playertable." ON (".$Nicktable.".fromid = ".$Playertable.".id) WHERE ".$Nicktable.".nick like '".$nicksearchencoded."' and ".$Playertable.".ubiname <> '' and ".$Nicktable.".nick <>'' and ".$Playertable.".serverident like '".$serverident."' ORDER BY nick");
+	$nickcount=mysqli_num_rows($searchnick);
 	$i=($site*$displaynickononesite)-$displaynickononesite;
 	$sitecount=$nickcount/$displaynickononesite+0.99999999;
 
@@ -174,9 +174,9 @@ if ($nicksearch!="")
 	echo "<tr height=2 colspan=3><td></td></tr>";
 	echo "<tr><td class=header background=\"images/".$design[$dset]."_middle.gif\"><b>Nickname</td><td class=header background=\"images/".$design[$dset]."_middle.gif\"><b>Used by Ubiname</td><td class=header background=\"images/".$design[$dset]."_middle.gif\" align=right><b>".$text_onserver."&nbsp;</td></tr></td>";
 
-	$searchnick=mysql_query ("SELECT ".$Playertable.".ubiname as ubiname , ".$Playertable.".serverident as serverident, ".$Nicktable.".nick as nick FROM ".$Nicktable." LEFT JOIN ".$Playertable." ON (".$Nicktable.".fromid = ".$Playertable.".id) WHERE ".$Nicktable.".nick like '".$nicksearchencoded."' and ".$Playertable.".ubiname <> '' and ".$Nicktable.".nick <>'' and ".$Playertable.".serverident like '".$serverident."' ORDER BY nick LIMIT ".$i.",".$displaynickononesite);
+	$searchnick=mysqli_query ($db,"SELECT ".$Playertable.".ubiname as ubiname , ".$Playertable.".serverident as serverident, ".$Nicktable.".nick as nick FROM ".$Nicktable." LEFT JOIN ".$Playertable." ON (".$Nicktable.".fromid = ".$Playertable.".id) WHERE ".$Nicktable.".nick like '".$nicksearchencoded."' and ".$Playertable.".ubiname <> '' and ".$Nicktable.".nick <>'' and ".$Playertable.".serverident like '".$serverident."' ORDER BY nick LIMIT ".$i.",".$displaynickononesite);
 	$i=0;
-	while ($searchednicks=mysql_fetch_array($searchnick, MYSQL_ASSOC))
+	while ($searchednicks=mysqli_fetch_array($searchnick, MYSQLI_ASSOC))
 	{
 		echo "<tr><td class=rand>".htmlentities(decodenick($searchednicks['nick']))."</td>";
 		echo "<td class=rand><img src=\"images/clear.gif\" width=10 height=10 name=\"s".$i."nick\"><a class=nav href=\"playerstats.php?mode=".$mode."&server=".$serveridentname[$searchednicks['serverident']]."&playersearch=".$searchednicks['ubiname']."\" onMouseOver=\"mi('s".$i."nick')\" onMouseOut=\"mo('s".$i."nick')\"><b>".$searchednicks['ubiname']."</b></a></td>";
@@ -211,8 +211,8 @@ foreach ($serveridents as $server => $serverident)
 {
 	if (isset($Statstable[$mode]))
 {
-$resubinames = mysql_query ("SELECT ".$Playertable.".id as id FROM ".$Playertable." INNER JOIN ".$Statstable[$mode]." ON (".$Statstable[$mode].".fromid = ".$Playertable.".id) WHERE ".$Playertable.".serverident='".$serverident."'".$searchaddstring." and ".$Playertable.".ubiname<>'' GROUP by ".$Playertable.".id");
-$ubicounted=mysql_num_rows($resubinames);
+$resubinames = mysqli_query ($db,"SELECT ".$Playertable.".id as id FROM ".$Playertable." INNER JOIN ".$Statstable[$mode]." ON (".$Statstable[$mode].".fromid = ".$Playertable.".id) WHERE ".$Playertable.".serverident='".$serverident."'".$searchaddstring." and ".$Playertable.".ubiname<>'' GROUP by ".$Playertable.".id");
+$ubicounted=mysqli_num_rows($resubinames);
 echo "<table  border=0 cellspacing=0 width=".$swidth."><tr><td colspan=4 class=bigheader background=\"images/".$design[$dset]."_header.gif\">".$text_onserver.": ".$server."</td><td colspan=3 align=right class=bigheader background=\"images/".$design[$dset]."_header.gif\">".$text_gamemode[$mode]."&nbsp;</td></tr>";
 echo "<tr><td class=randende colspan=7>".$text_site." (".$site.") : ";
 $sitecount=$ubicounted/$displayubiononesite+0.99999999;
@@ -224,19 +224,19 @@ echo "</td></tr><tr><td height=2></td></tr>";
 echo "<tr><td class=header background=\"images/".$design[$dset]."_middle.gif\"><b>Ubiname</td><td colspan=6 class=header background=\"images/".$design[$dset]."_middle.gif\"><b>".$text_usednicks."</td></tr></td></tr><tr height=2><td></td></tr></table>";
 $i=(($site-1)*$displaynickononesite);
 
-$resubinames = mysql_query ("SELECT ".$Playertable.".id as id , ".$Playertable.".ubiname as ubiname FROM ".$Playertable." INNER JOIN ".$Statstable[$mode]." ON (".$Statstable[$mode].".fromid = ".$Playertable.".id) WHERE ".$Playertable.".serverident='".$serverident."'".$searchaddstring." and ".$Playertable.".ubiname<>'' GROUP by ".$Playertable.".id ORDER BY ubiname LIMIT ".$i.",".$displayubiononesite);
+$resubinames = mysqli_query ($db,"SELECT ".$Playertable.".id as id , ".$Playertable.".ubiname as ubiname FROM ".$Playertable." INNER JOIN ".$Statstable[$mode]." ON (".$Statstable[$mode].".fromid = ".$Playertable.".id) WHERE ".$Playertable.".serverident='".$serverident."'".$searchaddstring." and ".$Playertable.".ubiname<>'' GROUP by ".$Playertable.".id ORDER BY ubiname LIMIT ".$i.",".$displayubiononesite);
 
 $i=0;
-while ($ubinames=mysql_fetch_array($resubinames, MYSQL_ASSOC))
+while ($ubinames=mysqli_fetch_array($resubinames, MYSQLI_ASSOC))
 {
 	$fromid=$ubinames['id'];
 	$ubiandnick = "<table  border=0 cellspacing=0 width=".$swidth."><tr><td class=header>";
 	$ubiandnick.= "<img src=\"images/clear.gif\" width=10 height=10 name=\"".$i."ubi\"><a class=nav href=\"playerstats.php?mode=".$mode."&server=".$server."&playersearch=".$ubinames['ubiname']."\" onMouseOver=\"mi('".$i."ubi')\" onMouseOut=\"mo('".$i."ubi')\">";
 	$ubiandnick.= "<b>".$ubinames['ubiname']."</a></td><td colspan=6 class=header><b>";
 	$i++;
-	$resnick = mysql_query ("SELECT * FROM $Nicktable WHERE fromid='$fromid' and nick <>''");
+	$resnick = mysqli_query ($db,"SELECT * FROM $Nicktable WHERE fromid='$fromid' and nick <>''");
 	$j=0;
-	while ($nicks=mysql_fetch_array($resnick, MYSQL_ASSOC))
+	while ($nicks=mysqli_fetch_array($resnick, MYSQLI_ASSOC))
 	{
 		if ($j++>0)
 		{
@@ -257,9 +257,9 @@ while ($ubinames=mysql_fetch_array($resubinames, MYSQL_ASSOC))
 	{
 	$scoreview=False;
 	$nostatsshow=False;
-	$resstats = mysql_query ("SELECT sum(kills) as sumkills, sum(deaths) as sumdeaths ,sum(roundsplayed) as sumrounds,sum(fired) as sumfired,sum(hits) as sumhits FROM $Statstable[$mode] WHERE fromid='$fromid'");
+	$resstats = mysqli_query ($db,"SELECT sum(kills) as sumkills, sum(deaths) as sumdeaths ,sum(roundsplayed) as sumrounds,sum(fired) as sumfired,sum(hits) as sumhits FROM $Statstable[$mode] WHERE fromid='$fromid'");
 
-	while ($stats=mysql_fetch_array($resstats, MYSQL_ASSOC))
+	while ($stats=mysqli_fetch_array($resstats, MYSQLI_ASSOC))
 	{
 		echo $ubiandnick;
 		$scoreview=True;
@@ -278,8 +278,8 @@ else
 	echo $ubiandnick;
 	$scoreview=True;
 	$nostatsshow=True;
-	$resstats = mysql_query ("SELECT * FROM $Statstable[$mode] WHERE fromid='$fromid' ORDER BY map");
-	while ($stats=mysql_fetch_array($resstats, MYSQL_ASSOC))
+	$resstats = mysqli_query ($db,"SELECT * FROM $Statstable[$mode] WHERE fromid='$fromid' ORDER BY map");
+	while ($stats=mysqli_fetch_array($resstats, MYSQLI_ASSOC))
 	{
 		if (!$teamstatsavailable)
 		{

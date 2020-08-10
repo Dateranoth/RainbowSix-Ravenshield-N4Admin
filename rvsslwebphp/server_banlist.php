@@ -7,20 +7,19 @@ error_reporting(2047);
 foreach ($_GET as $key => $value){${$key}=$value;}
 if (!isset($ip) or !isset($port)) {die ("No IP or ServerBeaconPort in URL !!");}
 require("config.inc.php");
-$db=mysql_connect("$dbHost","$dbUser","$dbPass") or die ("<CENTER>Connect-Error to MySQL!");
-@mysql_select_db("$dbDatabase",$db) or die ("<CENTER>Connect-Error to Database!");
-$res=@mysql_query("SELECT * FROM $dbtable2 WHERE id='1'");
-$num=mysql_num_rows($res);
+$db=mysqli_connect($dbHost,$dbUser,$dbPass,$dbDatabase) or die ("<CENTER>Connect-Error to MySQL!");
+$res=mysqli_query($db,"SELECT * FROM $dbtable2 WHERE id='1'");
+$num=mysqli_num_rows($res);
 for ($q=1;$q<$num+1;$q++)
 {
-$dbrow=mysql_fetch_array($res);
+$dbrow=mysqli_fetch_array($res);
 $lset=$dbrow['language'];
 $dset=$dbrow['css'];
 }
 $css="css/".$design[$dset]."_css.css";
 if (isset($customlanguage)){setcookie ("RVScustomlanguage",$customlanguage);}
 else
-{if (isset($HTTP_COOKIE_VARS["RVScustomlanguage"])){$customlanguage=$HTTP_COOKIE_VARS["RVScustomlanguage"];}}
+{if (isset($_COOKIE["RVScustomlanguage"])){$customlanguage=$_COOKIE["RVScustomlanguage"];}}
 if (!isset($customlanguage)) {$customlanguage=$language[$lset];}
 require('language/'.$customlanguage.'.inc.php');;
 

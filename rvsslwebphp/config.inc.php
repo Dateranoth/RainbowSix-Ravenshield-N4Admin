@@ -54,5 +54,8 @@ $ladder_update_time=300; //in seconds
 // End of advanced config
 //***************************************************************************
 // don´t edit !
+define('MYSQL_BOTH',MYSQLI_BOTH);
+define('MYSQL_NUM',MYSQLI_NUM);
+define('MYSQL_ASSOC',MYSQLI_ASSOC);
 require ("requires/functions.php");
 ?>

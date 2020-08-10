@@ -7,10 +7,10 @@ foreach ($_GET as $key => $value){${$key}=$value;}
 if (!isset($Submit)){$Submit="main";}
 require("config.inc.php");
 
-$db = mysql_connect($dbHost,$dbUser,$dbPass) or die ("<CENTER>Connect-Error to MySQL! Check $dbHost, $dbUser and $dbPass in config.inc.php!");
-mysql_select_db($dbDatabase,$db) or die ("<CENTER>Connect-Error to Database! Check $dbDatabase in config.inc.php!");
-$res=mysql_query("SELECT * FROM ".$dbtable2." WHERE id='1'");
-$dbrow=mysql_fetch_array($res);
+$db = mysqli_connect($dbHost,$dbUser,$dbPass,$dbDatabase) or die ("<CENTER>Connect-Error to MySQL! Check $dbHost, $dbUser and $dbPass in config.inc.php!");
+//mysql_select_db($dbDatabase,$db) or die ("<CENTER>Connect-Error to Database! Check $dbDatabase in config.inc.php!");
+$res=mysqli_query($db,"SELECT * FROM ".$dbtable2." WHERE id='1'");
+$dbrow=mysqli_fetch_array($res);
 $lset=$dbrow['language'];
 $dset=$dbrow['css'];
 $customlanguage=$language[$lset];
@@ -20,8 +20,8 @@ require('language/'.$customlanguage.'.inc.php');
 BuildPlayerAndNicksTables();
 BuildStatsTablesArray();
 
-$res=mysql_query("SELECT * FROM $dbtable2 WHERE id='1'");
-$dbrow = mysql_fetch_array($res);
+$res=mysqli_query($db,"SELECT * FROM $dbtable2 WHERE id='1'");
+$dbrow = mysqli_fetch_array($res);
 $adminname=$dbrow['aname'];
 $adminpassword= $dbrow['apass'];
 
@@ -39,9 +39,9 @@ if (isset($admin) and isset($pw))
 		setcookie ("RVSServerliste", "", time()-3600,"/");}
 	else
 	{
-		if (isset($HTTP_COOKIE_VARS["RVSServerliste"]))
+		if (isset($_COOKIE["RVSServerliste"]))
 		{
-			$usrcookie=$HTTP_COOKIE_VARS["RVSServerliste"];
+			$usrcookie=$_COOKIE["RVSServerliste"];
 		}
 		else 
 		{
@@ -74,10 +74,10 @@ function mo(n) { if (document.images) {document[n].src = eval("off.src");}}
 </tr><tr><td><hr></td></tr></table>
 <?php
 
-		$res=mysql_query("SELECT * FROM $dbtable1 ORDER BY sort");
-		$serveranzahl=mysql_num_rows($res);
+		$res=mysqli_query($db,"SELECT * FROM $dbtable1 ORDER BY sort");
+		$serveranzahl=mysqli_num_rows($res);
 		$q=0;
-		while ($dbrow = mysql_fetch_array($res))
+		while ($dbrow = mysqli_fetch_array($res))
 		{
 			$listdata[$q]['id']= $dbrow['id'];
 			$listdata[$q]['ip']= $dbrow['ip'];
@@ -86,20 +86,20 @@ function mo(n) { if (document.images) {document[n].src = eval("off.src");}}
 			$listdata[$q++]['text']= $dbrow['text'];
 		}
 
-		$res=mysql_query("SELECT * FROM $dbtable3 ORDER by map");
-		$linkanzahl=mysql_num_rows($res);
+		$res=mysqli_query($db,"SELECT * FROM $dbtable3 ORDER by map");
+		$linkanzahl=mysqli_num_rows($res);
 		$q=0;
-		while($dbrow = mysql_fetch_array($res))
+		while($dbrow = mysqli_fetch_array($res))
 		{
 			$mapdata[$q]['id']= $dbrow['id'];
 			$mapdata[$q]['map']= $dbrow['map'];
 			$mapdata[$q++]['link']= $dbrow['link'];
 		}
 
-		$res=mysql_query("SELECT * FROM ".$dbtable4."ServerIdentsNames");
-		$identanzahl=mysql_num_rows($res);
+		$res=mysqli_query($db,"SELECT * FROM ".$dbtable4."ServerIdentsNames");
+		$identanzahl=mysqli_num_rows($res);
 		$q=0;
-		while($dbrow = mysql_fetch_array($res))
+		while($dbrow = mysqli_fetch_array($res))
 		{
 			$identdata[$q]['id']= $dbrow['id'];
 			$identdata[$q]['ident']= $dbrow['serverident'];
@@ -114,12 +114,12 @@ function mo(n) { if (document.images) {document[n].src = eval("off.src");}}
 				break;
 
 			case "Change Serverlist Entry";
-				$wahl=mysql_query("UPDATE $dbtable1 SET ip='$ipneu',bp='$bpneu',sort='$sortneu',text='$textneu' WHERE id='$isneu'");
+				$wahl=mysqli_query($db,"UPDATE $dbtable1 SET ip='$ipneu',bp='$bpneu',sort='$sortneu',text='$textneu' WHERE id='$isneu'");
 				echo "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"0; url=admin.php?Submit=serverlist\">";
 				break;
 
 			case "Change Link-Entry";
-				$wahl=mysql_query("UPDATE $dbtable3 SET map='$mapneu',link='$linkneu' WHERE id='$linkid'");
+				$wahl=mysqli_query($db,"UPDATE $dbtable3 SET map='$mapneu',link='$linkneu' WHERE id='$linkid'");
 				echo "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"0; url=admin.php?Submit=dllinks\">";
 				break;
 
@@ -134,16 +134,16 @@ function mo(n) { if (document.images) {document[n].src = eval("off.src");}}
 					if ($identold!=$sidentneu)
 					{
 						echo "Updating Playertable for new Serverident!<br><br>";
-						$wahl=mysql_query("UPDATE $Playertable SET serverident='$sidentneu' WHERE serverident='$identold'");
+						$wahl=mysqli_query($db,"UPDATE $Playertable SET serverident='$sidentneu' WHERE serverident='$identold'");
 					}
-					$wahl=mysql_query("UPDATE ".$dbtable4."ServerIdentsNames SET serverident='$sidentneu',servername='$snameneu' WHERE id='$identid'");
+					$wahl=mysqli_query($db,"UPDATE ".$dbtable4."ServerIdentsNames SET serverident='$sidentneu',servername='$snameneu' WHERE id='$identid'");
 					echo "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"0; url=admin.php?Submit=serverident\">";
 				}
 				break;
 
 			case "New Serverlist Entry";
 				$sql="INSERT INTO $dbtable1 VALUES('','$ipneu','$bpneu','$sortneu','$textneu')";
-				$result=mysql_query($sql);
+				$result=mysqli_query($db,$sql);
 				echo "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"0; url=admin.php?Submit=serverlist\">";
 				break;
 
@@ -158,31 +158,31 @@ function mo(n) { if (document.images) {document[n].src = eval("off.src");}}
 					else
 					{
 						$sql="INSERT INTO ".$dbtable4."ServerIdentsNames VALUES('','$sidentneu','$snameneu')";
-						$result=mysql_query($sql);
+						$result=mysqli_query($db,$sql);
 						echo "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"0; url=admin.php?Submit=serverident\">";
 					}
 				}
 				else
 				{
 					$sql="INSERT INTO ".$dbtable4."ServerIdentsNames VALUES('','$sidentneu','$snameneu')";
-					$result=mysql_query($sql);
+					$result=mysqli_query($db,$sql);
 					echo "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"0; url=admin.php?Submit=serverident\">";
 				}
 				break;
 
 			case "New Link";
 				$sql="INSERT INTO $dbtable3 VALUES('','$mapneu','$linkneu')";
-				$result=mysql_query($sql);
+				$result=mysqli_query($db,$sql);
 				echo "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"0; url=admin.php?Submit=dllinks\">";
 				break;
 
 			case "deletelistip";
-				mysql_query("DELETE FROM $dbtable1 WHERE id='$isneu'");
+				mysqli_query($db,"DELETE FROM $dbtable1 WHERE id='$isneu'");
 				echo "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"0; url=admin.php?Submit=serverlist\">";
 				break;
 
 			case "deletelink";
-				mysql_query("DELETE FROM $dbtable3 WHERE id='$lneu'");
+				mysqli_query($db,"DELETE FROM $dbtable3 WHERE id='$lneu'");
 				echo "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"0; url=admin.php?Submit=dllinks\">";
 				break;
 
@@ -196,23 +196,23 @@ function mo(n) { if (document.images) {document[n].src = eval("off.src");}}
 				echo "Deleting Ident and Player+Stats of it, please wait!<br><br>";
 
 				$look="SELECT id FROM ".$Playertable." WHERE serverident='".$delidentname."'";
-				$res=mysql_query($look);
+				$res=mysqli_query($db,$look);
 
-				while ($dbrow=mysql_fetch_array($res))
+				while ($dbrow=mysqli_fetch_array($res))
 				{
 					$delid=$dbrow['id'];
 					foreach ($Statstable as $statstbl)
 					{
 						$deletestats="DELETE FROM ".$statstbl." WHERE fromid='".$delid."'";
-						mysql_query($deletestats);
+						mysqli_query($db,$deletestats);
 						$deletenicks="DELETE FROM ".$Nicktable." WHERE fromid='".$delid."'";
-						mysql_query($deletenicks);
+						mysqli_query($db,$deletenicks);
 					}
 				}
 				$deleteplayers="DELETE FROM ".$Playertable." WHERE serverident='".$delidentname."'";
-				mysql_query($deleteplayers);
-				mysql_query("DELETE FROM ".$dbtable4."ServerIdentsNames WHERE id='".$delident."'");
-				mysql_query("DELETE FROM ".$dbtable6."Update");
+				mysqli_query($db,$deleteplayers);
+				mysqli_query($db,"DELETE FROM ".$dbtable4."ServerIdentsNames WHERE id='".$delident."'");
+				mysqli_query($db,"DELETE FROM ".$dbtable6."Update");
 				echo "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"0; url=admin.php?Submit=serverident\">";
 				break;
 
@@ -233,17 +233,17 @@ function mo(n) { if (document.images) {document[n].src = eval("off.src");}}
 				break;
 
 			case "language";
-				$wahl = mysql_query("UPDATE $dbtable2 SET language='$lan' WHERE id='1'");
+				$wahl = mysqli_query($db,"UPDATE $dbtable2 SET language='$lan' WHERE id='1'");
 				echo "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"0; url=admin.php?Submit=main\">";
 				break;
 
 			case "design";
-				$wahl = mysql_query("UPDATE $dbtable2 SET css='$deset' WHERE id='1'");
+				$wahl = mysqli_query($db,"UPDATE $dbtable2 SET css='$deset' WHERE id='1'");
 				echo "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"0; url=admin.php?Submit=main\">";
 				break;
 
 			case "SetAdmin";
-				$wahl=mysql_query("UPDATE $dbtable2 SET aname='$nameneu',apass='$passneu' WHERE id='1'");
+				$wahl=mysqli_query($db,"UPDATE $dbtable2 SET aname='$nameneu',apass='$passneu' WHERE id='1'");
 				$namecook=crc32($nameneu.$passneu."serverliste");
 				setcookie ("RVSServerliste", "$namecook", time()+3600 , "/");
 				echo "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"0; url=admin.php?Submit=main\">";
@@ -251,7 +251,7 @@ function mo(n) { if (document.images) {document[n].src = eval("off.src");}}
 
 			case "forceladderupdate";
 				echo "<br>Ladders forces to Update!<br><br>";
-				mysql_query("DELETE FROM ".$dbtable6."Update");
+				mysqli_query($db,"DELETE FROM ".$dbtable6."Update");
 				echo "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"1; url=admin.php?Submit=main\">";
 				break;
 

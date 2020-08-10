@@ -30,7 +30,7 @@ $laddertables[]= 'LadderCountDownMode';
 $laddertables[]= 'LadderKamikazeMode';
 
 
-if (!isset($HTTP_GET_VARS["step"])) {
+if (!isset($_GET["step"])) {
 $step='1';
 ?>
 <form action="install.php">
@@ -60,7 +60,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA<br>
 <a href="gpl.txt">View the GNU General Public License</a>
 <?
 }
-else if ($HTTP_GET_VARS["step"]=='2') {
+else if ($_GET["step"]=='2') {
 ?>
 <form action="install.php">
 <b><u>Step 2</u></b><br><br>
@@ -87,12 +87,12 @@ foreach ($laddertables as $item)
 <br><hr><input type="hidden" name="step" value="3"><input type="submit" value="To Step 3"></form>
 <?
 }
-else if ($HTTP_GET_VARS["step"]=='3') {
-$db = mysql_connect("$dbHost", "$dbUser", "$dbPass") or die ("<CENTER>Connect-Error to MySQL!");
-@mysql_select_db("$dbDatabase", $db) or die ("<CENTER>Connect-Error to Database!");
+else if ($_GET["step"]=='3') {
+$db = mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbDatabase") or die ("<CENTER>Connect-Error to mysqli!");
+//mysqlii_select_db("$dbDatabase", $db) or die ("<CENTER>Connect-Error to Database!");
 
-mysql_query("DROP TABLE IF EXISTS $dbtable1");
-mysql_query("CREATE TABLE $dbtable1 (
+mysqli_query($db,"DROP TABLE IF EXISTS $dbtable1");
+mysqli_query($db,"CREATE TABLE $dbtable1 (
   id int(11) NOT NULL auto_increment,
   ip varchar(255) NOT NULL default '',
   bp varchar(255) NOT NULL default '',
@@ -101,8 +101,8 @@ mysql_query("CREATE TABLE $dbtable1 (
   PRIMARY KEY  (id)
 )");
 
-mysql_query("DROP TABLE IF EXISTS $dbtable2");
-mysql_query("CREATE TABLE $dbtable2 (
+mysqli_query($db,"DROP TABLE IF EXISTS $dbtable2");
+mysqli_query($db,"CREATE TABLE $dbtable2 (
   id int(11) NOT NULL auto_increment,
   language char(3) NOT NULL default '',
   css char(3) NOT NULL default '',
@@ -111,40 +111,40 @@ mysql_query("CREATE TABLE $dbtable2 (
   PRIMARY KEY  (id)
 )");
 
-mysql_query("INSERT INTO $dbtable2 VALUES (1, '1', '2', 'admin', 'admin')");
+mysqli_query($db,"INSERT INTO $dbtable2 VALUES (1, '0', '3', 'admin', 'admin')");
 
-mysql_query("DROP TABLE IF EXISTS $dbtable3");
-mysql_query("CREATE TABLE $dbtable3 (
+mysqli_query($db,"DROP TABLE IF EXISTS $dbtable3");
+mysqli_query($db,"CREATE TABLE $dbtable3 (
   id int(11) NOT NULL auto_increment,
   map varchar(50) NOT NULL default '',
   link varchar(200) NOT NULL default '',
   PRIMARY KEY  (id)
 )");
 
-mysql_query("INSERT INTO $dbtable3 VALUES (1, 'Prison', 'release.html')");
-mysql_query("INSERT INTO $dbtable3 VALUES (5, 'Peaks', 'release.html')");
-mysql_query("INSERT INTO $dbtable3 VALUES (6, 'Presidio', 'release.html')");
-mysql_query("INSERT INTO $dbtable3 VALUES (7, 'MeatPacking_Day', 'release.html')");
-mysql_query("INSERT INTO $dbtable3 VALUES (8, 'Warehouse', 'release.html')");
-mysql_query("INSERT INTO $dbtable3 VALUES (9, 'Alpines', 'release.html')");
-mysql_query("INSERT INTO $dbtable3 VALUES (10, 'Island', 'release.html')");
-mysql_query("INSERT INTO $dbtable3 VALUES (11, 'Bank', 'release.html')");
-mysql_query("INSERT INTO $dbtable3 VALUES (12, 'Import_Export', 'release.html')");
-mysql_query("INSERT INTO $dbtable3 VALUES (13, 'Garage', 'release.html')");
-mysql_query("INSERT INTO $dbtable3 VALUES (14, 'MeatPacking', 'release.html')");
-mysql_query("INSERT INTO $dbtable3 VALUES (15, 'Streets', 'release.html')");
-mysql_query("INSERT INTO $dbtable3 VALUES (16, 'Oil_Refinery', 'release.html')");
-mysql_query("INSERT INTO $dbtable3 VALUES (17, 'Parade', 'release.html')");
-mysql_query("INSERT INTO $dbtable3 VALUES (18, 'Penthouse', 'release.html')");
-mysql_query("INSERT INTO $dbtable3 VALUES (19, 'Airport', 'release.html')");
-mysql_query("INSERT INTO $dbtable3 VALUES (20, 'Mountain_High', 'release.html')");
-mysql_query("INSERT INTO $dbtable3 VALUES (21, 'Island_Dawn', 'release.html')");
-mysql_query("INSERT INTO $dbtable3 VALUES (22, 'Shipyard', 'release.html')");
-mysql_query("INSERT INTO $dbtable3 VALUES (24, 'Training', 'release.html')");
-mysql_query("INSERT INTO $dbtable3 VALUES (25, 'Airport_Night', 'release.html')");
+mysqli_query($db,"INSERT INTO $dbtable3 VALUES (1, 'Prison', 'release.html')");
+mysqli_query($db,"INSERT INTO $dbtable3 VALUES (5, 'Peaks', 'release.html')");
+mysqli_query($db,"INSERT INTO $dbtable3 VALUES (6, 'Presidio', 'release.html')");
+mysqli_query($db,"INSERT INTO $dbtable3 VALUES (7, 'MeatPacking_Day', 'release.html')");
+mysqli_query($db,"INSERT INTO $dbtable3 VALUES (8, 'Warehouse', 'release.html')");
+mysqli_query($db,"INSERT INTO $dbtable3 VALUES (9, 'Alpines', 'release.html')");
+mysqli_query($db,"INSERT INTO $dbtable3 VALUES (10, 'Island', 'release.html')");
+mysqli_query($db,"INSERT INTO $dbtable3 VALUES (11, 'Bank', 'release.html')");
+mysqli_query($db,"INSERT INTO $dbtable3 VALUES (12, 'Import_Export', 'release.html')");
+mysqli_query($db,"INSERT INTO $dbtable3 VALUES (13, 'Garage', 'release.html')");
+mysqli_query($db,"INSERT INTO $dbtable3 VALUES (14, 'MeatPacking', 'release.html')");
+mysqli_query($db,"INSERT INTO $dbtable3 VALUES (15, 'Streets', 'release.html')");
+mysqli_query($db,"INSERT INTO $dbtable3 VALUES (16, 'Oil_Refinery', 'release.html')");
+mysqli_query($db,"INSERT INTO $dbtable3 VALUES (17, 'Parade', 'release.html')");
+mysqli_query($db,"INSERT INTO $dbtable3 VALUES (18, 'Penthouse', 'release.html')");
+mysqli_query($db,"INSERT INTO $dbtable3 VALUES (19, 'Airport', 'release.html')");
+mysqli_query($db,"INSERT INTO $dbtable3 VALUES (20, 'Mountain_High', 'release.html')");
+mysqli_query($db,"INSERT INTO $dbtable3 VALUES (21, 'Island_Dawn', 'release.html')");
+mysqli_query($db,"INSERT INTO $dbtable3 VALUES (22, 'Shipyard', 'release.html')");
+mysqli_query($db,"INSERT INTO $dbtable3 VALUES (24, 'Training', 'release.html')");
+mysqli_query($db,"INSERT INTO $dbtable3 VALUES (25, 'Airport_Night', 'release.html')");
 
-mysql_query("DROP TABLE IF EXISTS ".$dbtable5."GameMode");
-mysql_query("CREATE TABLE ".$dbtable5."GameMode (
+mysqli_query($db,"DROP TABLE IF EXISTS ".$dbtable5."GameMode");
+mysqli_query($db,"CREATE TABLE ".$dbtable5."GameMode (
   id int(11) NOT NULL auto_increment,
   text varchar(20) NOT NULL default '',
   statstablename varchar(30) NOT NULL default '',
@@ -155,22 +155,22 @@ mysql_query("CREATE TABLE ".$dbtable5."GameMode (
   UNIQUE KEY LadderTable (laddertablename)
 )");
 
-mysql_query("INSERT INTO ".$dbtable5."GameMode VALUES (1, 'missioncoop', 'StatsMissionCoop', 'LadderMissionCoop')");
-mysql_query("INSERT INTO ".$dbtable5."GameMode VALUES (2, 'hostagecoop', 'StatsHostageCoop', 'LadderHostageCoop')");
-mysql_query("INSERT INTO ".$dbtable5."GameMode VALUES (3, 'terrorhuntcoop', 'StatsTerrorHuntCoop', 'LadderTerrorHuntCoop')");
-mysql_query("INSERT INTO ".$dbtable5."GameMode VALUES (4, 'hostage', 'StatsHostage', 'LadderHostage')");
-mysql_query("INSERT INTO ".$dbtable5."GameMode VALUES (5, 'survival', 'StatsSurvival', 'LadderSurvival')");
-mysql_query("INSERT INTO ".$dbtable5."GameMode VALUES (6, 'teamsurvival', 'StatsTeamSurvival', 'LadderTeamSurvival')");
-mysql_query("INSERT INTO ".$dbtable5."GameMode VALUES (7, 'bomb', 'StatsBomb', 'LadderBomb')");
-mysql_query("INSERT INTO ".$dbtable5."GameMode VALUES (8, 'pilot', 'StatsPilot', 'LadderPilot')");
-mysql_query("INSERT INTO ".$dbtable5."GameMode VALUES (9, 'terroristhuntadvmode', 'StatsTerroristHuntAdvMode', 'LadderTerroristHuntAdvMode')");
-mysql_query("INSERT INTO ".$dbtable5."GameMode VALUES (10, 'scatteredhuntadvmode', 'StatsScatteredHuntAdvMode', 'LadderScatteredHuntAdvMode')");
-mysql_query("INSERT INTO ".$dbtable5."GameMode VALUES (11, 'capturetheenemymode', 'StatsCaptureTheEnemyAdvMode', 'LadderCaptureTheEnemyAdvMode')");
-mysql_query("INSERT INTO ".$dbtable5."GameMode VALUES (12, 'countdownmode', 'StatsCountDownMode', 'LadderCountDownMode')");
-mysql_query("INSERT INTO ".$dbtable5."GameMode VALUES (13, 'kamikazemode', 'StatsKamikazeMode', 'LadderKamikazeMode')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameMode VALUES (1, 'missioncoop', 'StatsMissionCoop', 'LadderMissionCoop')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameMode VALUES (2, 'hostagecoop', 'StatsHostageCoop', 'LadderHostageCoop')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameMode VALUES (3, 'terrorhuntcoop', 'StatsTerrorHuntCoop', 'LadderTerrorHuntCoop')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameMode VALUES (4, 'hostage', 'StatsHostage', 'LadderHostage')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameMode VALUES (5, 'survival', 'StatsSurvival', 'LadderSurvival')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameMode VALUES (6, 'teamsurvival', 'StatsTeamSurvival', 'LadderTeamSurvival')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameMode VALUES (7, 'bomb', 'StatsBomb', 'LadderBomb')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameMode VALUES (8, 'pilot', 'StatsPilot', 'LadderPilot')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameMode VALUES (9, 'terroristhuntadvmode', 'StatsTerroristHuntAdvMode', 'LadderTerroristHuntAdvMode')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameMode VALUES (10, 'scatteredhuntadvmode', 'StatsScatteredHuntAdvMode', 'LadderScatteredHuntAdvMode')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameMode VALUES (11, 'capturetheenemymode', 'StatsCaptureTheEnemyAdvMode', 'LadderCaptureTheEnemyAdvMode')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameMode VALUES (12, 'countdownmode', 'StatsCountDownMode', 'LadderCountDownMode')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameMode VALUES (13, 'kamikazemode', 'StatsKamikazeMode', 'LadderKamikazeMode')");
 
-mysql_query("DROP TABLE IF EXISTS ".$dbtable5."GameModeInBeacon");
-mysql_query("CREATE TABLE ".$dbtable5."GameModeInBeacon (
+mysqli_query($db,"DROP TABLE IF EXISTS ".$dbtable5."GameModeInBeacon");
+mysqli_query($db,"CREATE TABLE ".$dbtable5."GameModeInBeacon (
   id int(11) NOT NULL auto_increment,
   fromgamemodeid int(11) NOT NULL default '0',
   beacontext varchar(30) NOT NULL default '',
@@ -178,23 +178,23 @@ mysql_query("CREATE TABLE ".$dbtable5."GameModeInBeacon (
   UNIQUE KEY beacontext (beacontext)
 )");
 
-mysql_query("INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (1, 1, 'RGM_MissionMode')");
-mysql_query("INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (2, 2, 'RGM_HostageRescueCoopMode')");
-mysql_query("INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (3, 3, 'RGM_TerroristHuntCoopMode')");
-mysql_query("INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (4, 4, 'RGM_HostageRescueAdvMode')");
-mysql_query("INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (5, 5, 'RGM_DeathmatchMode')");
-mysql_query("INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (6, 6, 'RGM_TeamDeathmatchMode')");
-mysql_query("INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (7, 7, 'RGM_BombAdvMode')");
-mysql_query("INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (8, 8, 'RGM_EscortAdvMode')");
-mysql_query("INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (9, 9, 'RGM_TerroristHuntAdvMode')");
-mysql_query("INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (10, 10, 'RGM_ScatteredHuntAdvMode')");
-mysql_query("INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (11, 11, 'RGM_CaptureTheEnemyAdvMode')");
-mysql_query("INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (12, 12, 'RGM_CountDownMode')");
-mysql_query("INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (13, 13, 'RGM_KamikazeMode')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (1, 1, 'RGM_MissionMode')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (2, 2, 'RGM_HostageRescueCoopMode')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (3, 3, 'RGM_TerroristHuntCoopMode')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (4, 4, 'RGM_HostageRescueAdvMode')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (5, 5, 'RGM_DeathmatchMode')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (6, 6, 'RGM_TeamDeathmatchMode')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (7, 7, 'RGM_BombAdvMode')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (8, 8, 'RGM_EscortAdvMode')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (9, 9, 'RGM_TerroristHuntAdvMode')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (10, 10, 'RGM_ScatteredHuntAdvMode')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (11, 11, 'RGM_CaptureTheEnemyAdvMode')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (12, 12, 'RGM_CountDownMode')");
+mysqli_query($db,"INSERT INTO ".$dbtable5."GameModeInBeacon VALUES (13, 13, 'RGM_KamikazeMode')");
 
 
-mysql_query("DROP TABLE IF EXISTS ".$dbtable4."ServerIdentsNames");
-mysql_query("CREATE TABLE ".$dbtable4."ServerIdentsNames (
+mysqli_query($db,"DROP TABLE IF EXISTS ".$dbtable4."ServerIdentsNames");
+mysqli_query($db,"CREATE TABLE ".$dbtable4."ServerIdentsNames (
   id int(11) NOT NULL auto_increment,
   serverident varchar(20) NOT NULL default '',
   servername varchar(30) NOT NULL default '',
@@ -202,8 +202,8 @@ mysql_query("CREATE TABLE ".$dbtable4."ServerIdentsNames (
   UNIQUE KEY serverident (serverident)
 )");
 
-mysql_query("DROP TABLE IF EXISTS ".$dbtable6."Update");
-mysql_query("CREATE TABLE ".$dbtable6."Update (
+mysqli_query($db,"DROP TABLE IF EXISTS ".$dbtable6."Update");
+mysqli_query($db,"CREATE TABLE ".$dbtable6."Update (
   id int(11) NOT NULL auto_increment,
   gamemodeid int(11) NOT NULL default '0',
   lastupdatetime int(11) NOT NULL default '0',
@@ -212,8 +212,8 @@ mysql_query("CREATE TABLE ".$dbtable6."Update (
   UNIQUE KEY gamemodeid (gamemodeid)
 )");
 
-mysql_query("DROP TABLE IF EXISTS ".$dbtable4."Nicks");
-mysql_query("CREATE TABLE ".$dbtable4."Nicks (
+mysqli_query($db,"DROP TABLE IF EXISTS ".$dbtable4."Nicks");
+mysqli_query($db,"CREATE TABLE ".$dbtable4."Nicks (
   id int(11) NOT NULL auto_increment,
   fromid int(11) NOT NULL default '0',
   nick varchar(30) NOT NULL default '',
@@ -221,19 +221,20 @@ mysql_query("CREATE TABLE ".$dbtable4."Nicks (
   KEY fromid (fromid)
 )");
 
-mysql_query("DROP TABLE IF EXISTS ".$dbtable4."Player");
-mysql_query("CREATE TABLE ".$dbtable4."Player (
+mysqli_query($db,"DROP TABLE IF EXISTS ".$dbtable4."Player");
+mysqli_query($db,"CREATE TABLE ".$dbtable4."Player (
   id int(11) NOT NULL auto_increment,
   serverident varchar(20) NOT NULL default '',
   ubiname varchar(30) NOT NULL default '',
+  ubipass varchar(30) NOT NULL default '',
   PRIMARY KEY  (id),
   KEY serverident (serverident)
 )");
 
 foreach ($statstables as $item)
 {
-mysql_query("DROP TABLE IF EXISTS ".$dbtable4.$item);
-mysql_query("CREATE TABLE ".$dbtable4.$item." (
+mysqli_query($db,"DROP TABLE IF EXISTS ".$dbtable4.$item);
+mysqli_query($db,"CREATE TABLE ".$dbtable4.$item." (
   id int(11) NOT NULL auto_increment,
   fromid int(11) NOT NULL default '0',
   kills int(11) NOT NULL default '0',
@@ -248,8 +249,8 @@ mysql_query("CREATE TABLE ".$dbtable4.$item." (
 
 foreach ($laddertables as $item)
 {
-mysql_query("DROP TABLE IF EXISTS ".$dbtable6.$item);
-mysql_query("CREATE TABLE ".$dbtable6.$item." (
+mysqli_query($db,"DROP TABLE IF EXISTS ".$dbtable6.$item);
+mysqli_query($db,"CREATE TABLE ".$dbtable6.$item." (
   id int(11) NOT NULL auto_increment,
   fromid int(11) NOT NULL default '0',
   score int(11) NOT NULL default '0',

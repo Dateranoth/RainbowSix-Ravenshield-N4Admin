@@ -4,13 +4,13 @@
 // www.tsaf.de , muschel@tsaf.de
 foreach ($_GET as $key => $value){${$key}=$value;}
 error_reporting(2047);
-if (!isset($HTTP_COOKIE_VARS["RVSsessionip"]) or !isset($HTTP_COOKIE_VARS["RVSsessionport"])){die ("cookie for ip+port error!");}
-$ip=$HTTP_COOKIE_VARS["RVSsessionip"];
-$port=$HTTP_COOKIE_VARS["RVSsessionport"];
+if (!isset($_COOKIE["RVSsessionip"]) or !isset($_COOKIE["RVSsessionport"])){die ("cookie for ip+port error!");}
+$ip=$_COOKIE["RVSsessionip"];
+$port=$_COOKIE["RVSsessionport"];
 if (!$ip) {echo "No IP error!";}
 if (!$port) {echo "No Beaconport error!";}
 $cookiename="RVS".$port.crc32($ip);
-$pw=base64_decode($HTTP_COOKIE_VARS[$cookiename]);
+$pw=base64_decode($_COOKIE[$cookiename]);
 require("config.inc.php");
 ConnectTheDBandGetDefaults();
 require('language/'.$customlanguage.'.inc.php');

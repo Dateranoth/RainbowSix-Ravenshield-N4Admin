@@ -8,14 +8,14 @@ require("config.inc.php");
 DefDiffLevels();
 if (isset($ip)){setcookie ("RVSsessionip",$ip,2147483647,"/");$info="New IP from URL set!";}
 else{
-if (isset($HTTP_COOKIE_VARS["RVSsessionip"]))
-{$ip=$HTTP_COOKIE_VARS["RVSsessionip"];}
+if (isset($_COOKIE["RVSsessionip"]))
+{$ip=$_COOKIE["RVSsessionip"];}
 else{die ("No IP error!");}
 }
 if (isset($port)){setcookie ("RVSsessionport",$port,2147483647,"/");$info=$info." New Port from URL set!";}
 else{
-if (isset($HTTP_COOKIE_VARS["RVSsessionport"]))
-{$port=$HTTP_COOKIE_VARS["RVSsessionport"];}
+if (isset($_COOKIE["RVSsessionport"]))
+{$port=$_COOKIE["RVSsessionport"];}
 else{die ("No Beaconport error!");}
 }
 ConnectTheDBandGetDefaults();
@@ -39,7 +39,7 @@ fclose($fp);}
 else {$beaconerror=True;}
 if ($sTmp=="success"){setcookie ($cookiename,base64_encode($pw),2147483647,"/");$pwcookie=$pw;$info="Logged in and Cookies set to this Server!";}
 }
-else{$pwcookie=base64_decode($HTTP_COOKIE_VARS[$cookiename]);}
+else{$pwcookie=base64_decode($_COOKIE[$cookiename]);}
 $ip=gethostbyname($ip);
 require("header.php");
 ?>
@@ -1008,8 +1008,8 @@ $hitx++;
 else {echo "<td class=randende>&nbsp;</td>";}
 ?>
 </table>
-<br><input type="submit" class="button" name="Submit" value="Logoff"><br>(Cookies cleared)<br>
-<br><input type="submit" class="button" name="Submit" value="Leave"><br>(Cookies stays)
+<form><br><input type="submit" class="button" name="Submit" value="Logoff"><br>(Cookies cleared)<br>
+<form><br><input type="submit" class="button" name="Submit" value="Leave"><br>(Cookies stays)
 <?=Copyrightext()?></center></form></body></html>
 <?php }}}
 else

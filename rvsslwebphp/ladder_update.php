@@ -8,21 +8,21 @@ if (!isset($getscoretable))
 }
 $actualtime=time();
 $look="Select * FROM ".$updatetable." WHERE gamemodeid='".$modeid."'";
-$lookedforupdate=mysql_query ($look);
+$lookedforupdate=mysqli_query ($db,$look);
 
-if (mysql_num_rows($lookedforupdate)==0)
+if (mysqli_num_rows($lookedforupdate)==0)
 {
 	$insertnew="INSERT INTO ".$updatetable." VALUES ('','".$modeid."','".$actualtime."','0')";
-	$insertednew=mysql_query ($insertnew);
+	$insertednew=mysqli_query ($db,$insertnew);
 	$ladder_update_time=-1;
 }
 $look="Select * FROM ".$updatetable." WHERE gamemodeid='".$modeid."'";
-$lookedforupdate=mysql_query ($look);
-if (mysql_num_rows($lookedforupdate)==0)
+$lookedforupdate=mysqli_query ($db,$look);
+if (mysqli_num_rows($lookedforupdate)==0)
 {
 	die ("Database Error?!");
 }
-$datasetforupdate=mysql_fetch_array($lookedforupdate);
+$datasetforupdate=mysqli_fetch_array($lookedforupdate);
 if ($datasetforupdate['inupdate']=="1")
 {
 	die ("</table>Ladder in Update, try again later!");
@@ -30,15 +30,15 @@ if ($datasetforupdate['inupdate']=="1")
 if (($datasetforupdate['lastupdatetime']+$ladder_update_time)<$actualtime)
 {
 	$lock="UPDATE ".$updatetable." SET inupdate='1' WHERE gamemodeid='".$modeid."'";
-	mysql_query($lock);
+	mysqli_query($db,$lock);
 
 	echo "</table>Ladder in Update, please wait!";
 
-	$wegdamit=mysql_query ("DELETE FROM $writeladdertable");
+	$wegdamit=mysqli_query ($db,"DELETE FROM $writeladdertable");
 
-	$resstats = mysql_query ("SELECT fromid, sum(kills) as sumkills, sum(deaths) as sumdeaths ,sum(roundsplayed) as sumrounds,sum(fired) as sumfired,sum(hits) as sumhits  FROM $getscoretable GROUP BY fromid");
+	$resstats = mysqli_query ($db,"SELECT fromid, sum(kills) as sumkills, sum(deaths) as sumdeaths ,sum(roundsplayed) as sumrounds,sum(fired) as sumfired,sum(hits) as sumhits  FROM $getscoretable GROUP BY fromid");
 
-	while ($stats=mysql_fetch_array($resstats, MYSQL_ASSOC))
+	while ($stats=mysqli_fetch_array($resstats, MYSQL_ASSOC))
 	{
 
 		if ($stats['sumhits']==0)
@@ -74,12 +74,12 @@ if (($datasetforupdate['lastupdatetime']+$ladder_update_time)<$actualtime)
 		if ($score!=0)
 		{
 			$newscoreset="INSERT INTO ".$writeladdertable." VALUES ('','".$stats['fromid']."','".$score."')";
-			mysql_query ($newscoreset);
+			mysqli_query ($db,$newscoreset);
 		}
 
 	}
 	$newtimeset="UPDATE ".$updatetable." SET lastupdatetime='".$actualtime."',inupdate='0'  WHERE gamemodeid='".$modeid."'";
-	mysql_query ($newtimeset);
+	mysqli_query ($db,$newtimeset);
 	echo "<meta http-equiv=\"refresh\" content=\"0\">";
 	die ("<br>ok!");
 }

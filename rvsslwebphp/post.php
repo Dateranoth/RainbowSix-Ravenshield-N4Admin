@@ -5,8 +5,8 @@
 require("config.inc.php");
 if (isset($_POST))
 {
-	$db=mysql_connect("$dbHost", "$dbUser", "$dbPass") or die ("<CENTER>Connect-Error to MySQL!");
-	mysql_select_db("$dbDatabase", $db) or die ("<CENTER>Connect-Error to Database!");
+	$db=mysqli_connect($dbHost,$dbUser,$dbPass,$dbDatabase) or die ("<CENTER>Connect-Error to MySQL!");
+	//mysql_select_db("$dbDatabase", $db) or die ("<CENTER>Connect-Error to Database!");
 	BuildGameModeTranslateArray();
 	BuildStatsTablesArray();
 	BuildPlayerAndNicksTables();
@@ -52,40 +52,66 @@ if (isset($_POST))
 
 	while (isset($Ubi[$counter]))
 	{
-		$look="SELECT id FROM ".$Playertable." WHERE serverident='".$ident."' and ubiname='".$Ubi[$counter]."'";
-		$res=mysql_query($look);
-		if (mysql_num_rows($res)==0)
+        $N4UserPass=explode("_",preg_replace("/\s+/", "", $Ubi[$counter]));
+        if (count($N4UserPass)==2 && $N4UserPass[0]!=='' && $N4UserPass[1]!=='')
+        {
+            $UbiID = $N4UserPass[0];
+            $UbiPass = $N4UserPass[1];
+        }
+        else
+        {
+            $UbiID = "Anonymous";
+            $UbiPass = "Pass";            
+        }       
+              
+		$look="SELECT id FROM ".$Playertable." WHERE serverident='".$ident."' and ubiname='".$UbiID."'";
+		$res=mysqli_query($db,$look);
+		if (mysqli_num_rows($res)>=1)
+        {
+            $look="SELECT id FROM ".$Playertable." WHERE serverident='".$ident."' and ubiname='".$UbiID."' and ubipass='".$UbiPass."'";
+            $res=mysqli_query($db,$look);
+            if (mysqli_num_rows($res)==0)
+            {
+                $UbiID = "Anonymous";
+                $UbiPass = "Pass";
+                $look="SELECT id FROM ".$Playertable." WHERE serverident='".$ident."' and ubiname='".$UbiID."'";
+                $res=mysqli_query($db,$look);
+            }    
+        }
+        
+        if (mysqli_num_rows($res)==0)
 		{
-			$add="INSERT INTO ".$Playertable." VALUES('','".$ident."','".$Ubi[$counter]."')";
-			$res = mysql_query($add);
-			$look="SELECT id FROM ".$Playertable." WHERE serverident='".$ident."' and ubiname='".$Ubi[$counter]."'";
-			$res=mysql_query($look);
+			$add="INSERT INTO ".$Playertable." VALUES('','".$ident."','".$UbiID."','".$UbiPass."')";
+			$res = mysqli_query($db,$add);
+			$look="SELECT id FROM ".$Playertable." WHERE serverident='".$ident."' and ubiname='".$UbiID."'";
+			$res=mysqli_query($db,$look);
 		}
-		$dbrow=mysql_fetch_array($res);
+        
+		$dbrow=mysqli_fetch_array($res);
 		$dbubiid=$dbrow['id'];
 
 		$look="SELECT id FROM ".$Nicktable." WHERE fromid='".$dbubiid."' and nick='".$Nick[$counter]."'";
-		$res = mysql_query ($look);
-		if (mysql_num_rows($res)==0)
+		$res = mysqli_query ($db,$look);
+		if (mysqli_num_rows($res)==0)
 		{
 			$add="INSERT INTO ".$Nicktable." VALUES ('','".$dbubiid."','".$Nick[$counter]."')";
-			mysql_query($add);
+			mysqli_query($db,$add);
 		}
 
 		if (isset($StartUbiArray[$Ubi[$counter]]['startdeaths']))
 		{
 
 			$look="SELECT * FROM ".$writetable." WHERE fromid='".$dbubiid."' and map='".$map."'";
-			$res = mysql_query ($look);
+			$res = mysqli_query ($db,$look);
 
-			if (mysql_num_rows($res)==0)
+			if (mysqli_num_rows($res)==0)
 			{
 				$add="INSERT INTO ".$writetable." VALUES ('','".$dbubiid."','".$Kills[$counter]."','".$Deaths[$counter]."','".$map."','1','".$Fired[$counter]."','".$Hits[$counter]."')";
-				mysql_query($add);
+				mysqli_query($db,$add);
 			}
-			elseif (mysql_num_rows($res)==1)
+			elseif (mysqli_num_rows($res)==1)
 			{
-				$dbrow=mysql_fetch_array($res, MYSQL_ASSOC);
+				$dbrow=mysqli_fetch_array($res, MYSQL_ASSOC);
 
 				$newkills=$Kills[$counter]+$dbrow['kills'];
 				$newdeaths=$Deaths[$counter]+$dbrow['deaths']-$StartUbiArray[$Ubi[$counter]]['startdeaths'];
@@ -100,7 +126,7 @@ if (isset($_POST))
 				$update.=" fired='".$newfired."',";
 				$update.=" hits='".$newhits."'";
 				$update.=" WHERE id='".$dbrow['id']."'";
-				mysql_query($update);
+				mysqli_query($db,$update);
 			}
 		}
 

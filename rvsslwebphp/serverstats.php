@@ -89,13 +89,13 @@ else {echo $server;}
 echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gamemode:".$text_gamemode[$mode]."</td></tr>";
 echo "<tr><td class=rand>&nbsp;<b>".$text_map."</b></td><td class=rand align=center width=\"10%\"><b>".$text_pdkills."</b></td><td class=rand align=center width=\"10%\"><b>".$text_pddeaths."</b></td><td class=rand align=center width=\"10%\"><b>Fired</b></td><td class=randende align=center width=\"10%\"><b>Hits</b></td></tr>";
 
-$resstats = mysql_query ("SELECT ".$Statstable[$mode].".map as map, sum(".$Statstable[$mode].".kills) as sumkills, sum(".$Statstable[$mode].".deaths) as sumdeaths ,sum(".$Statstable[$mode].".fired) as sumfired,sum(".$Statstable[$mode].".hits) as sumhits  FROM ".$Statstable[$mode]." INNER JOIN ".$Playertable." ON (".$Statstable[$mode].".fromid = ".$Playertable.".id) WHERE ".$Playertable.".serverident like '".$serverident."' and ".$Playertable.".ubiname<>'' GROUP by ".$Statstable[$mode].".map ORDER BY ".$Statstable[$mode].".map ");
+$resstats = mysqli_query ($db,"SELECT ".$Statstable[$mode].".map as map, sum(".$Statstable[$mode].".kills) as sumkills, sum(".$Statstable[$mode].".deaths) as sumdeaths ,sum(".$Statstable[$mode].".fired) as sumfired,sum(".$Statstable[$mode].".hits) as sumhits  FROM ".$Statstable[$mode]." INNER JOIN ".$Playertable." ON (".$Statstable[$mode].".fromid = ".$Playertable.".id) WHERE ".$Playertable.".serverident like '".$serverident."' and ".$Playertable.".ubiname<>'' GROUP by ".$Statstable[$mode].".map ORDER BY ".$Statstable[$mode].".map ");
 $sumkills=0;
 $sumdeaths=0;
 $sumfired=0;
 $sumhits=0;
 
-while ($stats=mysql_fetch_array($resstats, MYSQL_ASSOC))
+while ($stats=mysqli_fetch_array($resstats, MYSQL_ASSOC))
 {
 $mapimage="mapimages/".strtolower($stats['map']).".jpg";
 if (!file_exists($mapimage)){$mapimage="images/defaultmap.jpg";}

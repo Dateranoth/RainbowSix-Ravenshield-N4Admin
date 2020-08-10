@@ -4,12 +4,12 @@
 // www.tsaf.de , muschel@tsaf.de
 foreach ($_GET as $key => $value){${$key}=$value;}
 error_reporting(2047);
-if (!isset($HTTP_COOKIE_VARS["RVSsessionip"]) or !isset($HTTP_COOKIE_VARS["RVSsessionport"])){die ("cookie for ip+port error!");}
-$ip=$HTTP_COOKIE_VARS["RVSsessionip"];
-$port=$HTTP_COOKIE_VARS["RVSsessionport"];
+if (!isset($_COOKIE["RVSsessionip"]) or !isset($_COOKIE["RVSsessionport"])){die ("cookie for ip+port error!");}
+$ip=$_COOKIE["RVSsessionip"];
+$port=$_COOKIE["RVSsessionport"];
 $cookiename="RVS".$port.crc32($ip);
-if (!isset($HTTP_COOKIE_VARS[$cookiename])){die("error, no pw for this server in cookie!");}
-$pw=base64_decode($HTTP_COOKIE_VARS[$cookiename]);
+if (!isset($_COOKIE[$cookiename])){die("error, no pw for this server in cookie!");}
+$pw=base64_decode($_COOKIE[$cookiename]);
 require("config.inc.php");
 ConnectTheDBandGetDefaults();
 require('language/'.$customlanguage.'.inc.php');
@@ -45,12 +45,7 @@ $mess='<a class=nav href="server_banlist_admin.php?delban='.$delban.'&sendit=sen
 }
 elseif (isset($tobanid))
 {
-if (strlen($tobanid)<>32)
-{$mess="BanID is not 32 Chars long!";}
-elseif (ctype_alnum($tobanid)<>True)
-{$mess="BanID is not alphanumeric!";}
-else
-{$mess='<a class=nav href="server_banlist_admin.php?addban='.$tobanid.'&sendit=send">>>> Confirm add Ban-ID ('.$tobanid.') <<<</a>';}
+$mess='<a class=nav href="server_banlist_admin.php?addban='.$tobanid.'&sendit=send">>>> Confirm add Ban-ID ('.$tobanid.') <<<</a>';
 }
 
 $fp=fsockopen("udp://".$ip,$port,$error,$error2);
@@ -124,7 +119,7 @@ function mo(n) { if (document.images) {document[n].src = eval("off.src");}}
 <tr><td background="images/<?=$design[$dset]?>_header.gif" colspan=2 class=bigheader align=center>Add Ban</td>
 </tr><tr>
 <td class=randende colspan=2 align=center>
-<input type="text" class="textfield" name="tobanid" size="60" maxlength="32" value="BanID" title="Enter BanID to ban here">
+<input type="text" class="textfield" name="tobanid" size="60" maxlength="32" value="BanIP" title="Enter IP to ban here">
 &nbsp;<input type="submit" class="button" name="Submit" value="AddBanID"><input type="hidden" class="button" name="Submit" value="AddBanID"></td>
 </tr>
 <tr>

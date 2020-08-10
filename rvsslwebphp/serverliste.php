@@ -10,14 +10,14 @@ $allespieler="";
 require("config.inc.php");
 if (isset($hideplayers)){setcookie ("RVShideoptionplayers",$hideplayers);}
 else
-{if (isset($HTTP_COOKIE_VARS["RVShideoptionplayers"])){$hideplayers=$HTTP_COOKIE_VARS["RVShideoptionplayers"];}}
+{if (isset($_COOKIE["RVShideoptionplayers"])){$hideplayers=$_COOKIE["RVShideoptionplayers"];}}
 if (!isset($hideplayers)) {$hideplayers="1";}
 ConnectTheDBandGetDefaults();
 BuildGameModeTranslateArray();
 require('language/'.$customlanguage.'.inc.php');
-$res=mysql_query("SELECT * FROM $dbtable1 ORDER BY sort");
-$serveranzahl=mysql_num_rows($res);
-for ($q=0;$q<$serveranzahl;$q++){$dbrow=mysql_fetch_array($res);$ip[$q]=$dbrow['ip'];$bp[$q]=$dbrow['bp'];}
+$res=mysqli_query($db,"SELECT * FROM $dbtable1 ORDER BY sort");
+$serveranzahl=mysqli_num_rows($res);
+for ($q=0;$q<$serveranzahl;$q++){$dbrow=mysqli_fetch_array($res);$ip[$q]=$dbrow['ip'];$bp[$q]=$dbrow['bp'];}
 $spieler=0;$zaehler=0;
 require("header.php");
 ?>
@@ -157,7 +157,7 @@ if ($hideplayers=="1")
 <td align=center class=oben background="images/<?=$design[$dset]?>_header.gif"><?=$text_servername?></td>
 </tr>
 <?php
-if($allespieler)
+if(is_array($allespieler))
 {
 asort($allespieler);
 $zz=0;

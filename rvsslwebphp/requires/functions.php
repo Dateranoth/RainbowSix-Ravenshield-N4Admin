@@ -3,22 +3,22 @@
 
 function BuildGameModeTranslateArray()
 {
-global $GameModeTranslate,$dbtable5;
+global $GameModeTranslate,$dbtable5,$db;
 
 $gamemodetable=$dbtable5."GameMode";
 $gamemodebeacontable=$dbtable5."GameModeInBeacon";
 
 $searchstr="SELECT * FROM ".$gamemodetable;
-$searchresult=mysql_query($searchstr);
- while ($searchgamemodes=mysql_fetch_array($searchresult, MYSQL_ASSOC))
+$searchresult=mysqli_query($db,$searchstr);
+ while ($searchgamemodes=mysqli_fetch_array($searchresult, MYSQLI_ASSOC))
  {
  $availgamemodesids[$searchgamemodes['text']]=$searchgamemodes['id'];
  }
   foreach ($availgamemodesids as $key => $value)
   {
 	$searchbeaconstr="SELECT * FROM ".$gamemodebeacontable." WHERE fromgamemodeid='".$value."'";
-	$searchbeaconresult=mysql_query($searchbeaconstr);
-	while ($searchbeacontexts=mysql_fetch_array($searchbeaconresult, MYSQL_ASSOC))
+	$searchbeaconresult=mysqli_query($db,$searchbeaconstr);
+	while ($searchbeacontexts=mysqli_fetch_array($searchbeaconresult, MYSQLI_ASSOC))
 	{
     $GameModeTranslate[$searchbeacontexts['beacontext']]=$key;
 	}
@@ -46,11 +46,11 @@ return $out;
 }
 function BuildStatsTablesArray()
 {
-global $Statstable,$dbtable4,$dbtable5;
+global $Statstable,$dbtable4,$dbtable5,$db;
 
 $search="SELECT * FROM ".$dbtable5."GameMode";
-$searchstatstableresult=mysql_query ($search);
- while ($searchstatstable=mysql_fetch_array($searchstatstableresult, MYSQL_ASSOC))
+$searchstatstableresult=mysqli_query ($db,$search);
+ while ($searchstatstable=mysqli_fetch_array($searchstatstableresult, MYSQLI_ASSOC))
  {
  if ($searchstatstable['statstablename']!="")
   {
@@ -61,11 +61,11 @@ $searchstatstableresult=mysql_query ($search);
 }
 function BuildGameMode()
 {
-global $GameModeArray,$dbtable5;
+global $GameModeArray,$dbtable5,$db;
 
 $search="SELECT * FROM ".$dbtable5."GameMode";
-$searchgamemode=mysql_query ($search);
- while ($searchedgamemode=mysql_fetch_array($searchgamemode, MYSQL_ASSOC))
+$searchgamemode=mysqli_query ($db,$search);
+ while ($searchedgamemode=mysqli_fetch_array($searchgamemode, MYSQLI_ASSOC))
  {
   $GameModeArray[$searchedgamemode['text']]=$searchedgamemode['id'];
  }
@@ -105,17 +105,17 @@ echo "<br>Updated for Athena Sword by <a class=nav href=\"http://ravenshield.the
 
 function ConnectTheDBandGetDefaults()
 {
-global $dset,$css,$design,$dbHost,$dbUser,$dbPass,$db,$dbDatabase,$dbtable2,$language,$HTTP_COOKIE_VARS,$customlanguage;
+global $dset,$css,$design,$dbHost,$dbUser,$dbPass,$db,$dbDatabase,$dbtable2,$language,$_COOKIE,$customlanguage;
 
-$db = mysql_connect($dbHost,$dbUser,$dbPass) or die ("<CENTER>Connect-Error to MySQL! Check $dbHost, $dbUser and $dbPass in config.inc.php!");
-mysql_select_db($dbDatabase,$db) or die ("<CENTER>Connect-Error to Database! Check $dbDatabase in config.inc.php!");
-$res=mysql_query("SELECT * FROM ".$dbtable2." WHERE id='1'");
-$dbrow=mysql_fetch_array($res);
+$db = mysqli_connect($dbHost,$dbUser,$dbPass,$dbDatabase) or die ("<CENTER>Connect-Error to MySQL! Check $dbHost, $dbUser and $dbPass in config.inc.php!");
+//mysql_select_db($dbDatabase,$db) or die ("<CENTER>Connect-Error to Database! Check $dbDatabase in config.inc.php!");
+$res=mysqli_query($db,"SELECT * FROM ".$dbtable2." WHERE id='1'");
+$dbrow=mysqli_fetch_array($res);
 $lset=$dbrow['language'];
 $dset=$dbrow['css'];
 if (isset($customlanguage)){setcookie ("RVScustomlanguage",$customlanguage);}
 else {
-if (isset($HTTP_COOKIE_VARS["RVScustomlanguage"])){$customlanguage=$HTTP_COOKIE_VARS["RVScustomlanguage"];}
+if (isset($_COOKIE["RVScustomlanguage"])){$customlanguage=$_COOKIE["RVScustomlanguage"];}
 }
 if (!isset($customlanguage)) {$customlanguage=$language[$lset];}
 $css="css/".$design[$dset]."_css.css";
@@ -145,11 +145,11 @@ $diff['3']="Elite";
 }
 function BuildLadderTablesArray()
 {
-global $Laddertable,$dbtable5,$dbtable6;
+global $Laddertable,$dbtable5,$dbtable6,$db;
 
 $search="SELECT * FROM ".$dbtable5."GameMode";
-$searchladdertableresult=mysql_query ($search);
- while ($searchladdertable=mysql_fetch_array($searchladdertableresult, MYSQL_ASSOC))
+$searchladdertableresult=mysqli_query ($db,$search);
+ while ($searchladdertable=mysqli_fetch_array($searchladdertableresult, MYSQLI_ASSOC))
  {
  if ($searchladdertable['laddertablename']!="")
   {
@@ -166,11 +166,11 @@ $Nicktable=$dbtable4."Nicks";
 }
 function BuildServerIdentNameArrays()
 {
-global $servernameident,$serveridentname,$dbtable4;
+global $servernameident,$serveridentname,$dbtable4,$db;
 
 $search="SELECT * FROM ".$dbtable4."ServerIdentsNames";
-$searchservernameidentresult=mysql_query ($search);
- while ($searchservernameidententry=mysql_fetch_array($searchservernameidentresult, MYSQL_ASSOC))
+$searchservernameidentresult=mysqli_query ($db,$search);
+ while ($searchservernameidententry=mysqli_fetch_array($searchservernameidentresult, MYSQLI_ASSOC))
  {
   $servernameident[$searchservernameidententry['servername']]=$searchservernameidententry['serverident'];
   $serveridentname[$searchservernameidententry['serverident']]=$searchservernameidententry['servername'];

@@ -8,19 +8,19 @@ if (!isset($ip) or !isset($beaconport)) {die ("No IP or ServerBeaconPort in URL 
 require("config.inc.php");
 if (isset($hideinfo)){setcookie ("RVShideoptioninfo",$hideinfo);}
 else
-{if (isset($HTTP_COOKIE_VARS["RVShideoptioninfo"])){$hideinfo=$HTTP_COOKIE_VARS["RVShideoptioninfo"];}}
+{if (isset($_COOKIE["RVShideoptioninfo"])){$hideinfo=$_COOKIE["RVShideoptioninfo"];}}
 if (!isset($hideinfo)) {$hideinfo="1";}
 if (isset($hidemaps)){setcookie ("RVShideoptionmaps",$hidemaps);}
 else
-{if (isset($HTTP_COOKIE_VARS["RVShideoptionmaps"])){$hidemaps=$HTTP_COOKIE_VARS["RVShideoptionmaps"];}}
+{if (isset($_COOKIE["RVShideoptionmaps"])){$hidemaps=$_COOKIE["RVShideoptionmaps"];}}
 if (!isset($hidemaps)) {$hidemaps="1";}
 DefDiffLevels();
 ConnectTheDBandGetDefaults();
 BuildGameModeTranslateArray();
 require('language/'.$customlanguage.'.inc.php');
-$res=mysql_query("SELECT * FROM $dbtable3");
-$linksanzahl = mysql_num_rows($res);
-for ($q=0; $q<$linksanzahl; $q++){$dbrow = mysql_fetch_array($res);$maplink[$dbrow['map']]= $dbrow['link'];}
+$res=mysqli_query($db,"SELECT * FROM $dbtable3");
+$linksanzahl = mysqli_num_rows($res);
+for ($q=0; $q<$linksanzahl; $q++){$dbrow = mysqli_fetch_array($res);$maplink[$dbrow['map']]= $dbrow['link'];}
 $ip=gethostbyname($ip);
 require("header.php");
 ?>
@@ -345,8 +345,9 @@ if ($GameModeTranslate[$dataarray['F1']]=="pilot" or $GameModeTranslate[$dataarr
 if ($ausgabe['0']=="3") {$color="red";}
 if ($ausgabe['0']=="2") {$color="green";}
 }
-$playerlink="playerdetail.php?nick=".base64_encode($ausgabe['1'])."&Ubi=".base64_encode($ausgabe['7'])."&PWpn=".$ausgabe['8']."&SWpn=".$ausgabe['9']."&PWpnG=".$ausgabe['10']."&SWpnG=".$ausgabe['11']."&Hits=".$ausgabe['12']."&Fired=".$ausgabe['13']."&Kills=".$ausgabe['2']."&Deaths=".$ausgabe['5']."&Acc=".$ausgabe['14'];
-$ladderlink="ubiladder.php?ubi=$ausgabe[7]";
+$ubistripped=explode("_",$ausgabe['7']);
+$playerlink="playerdetail.php?nick=".base64_encode($ausgabe['1'])."&Ubi=".base64_encode($ubistripped[0])."&PWpn=".$ausgabe['8']."&SWpn=".$ausgabe['9']."&PWpnG=".$ausgabe['10']."&SWpnG=".$ausgabe['11']."&Hits=".$ausgabe['12']."&Fired=".$ausgabe['13']."&Kills=".$ausgabe['2']."&Deaths=".$ausgabe['5']."&Acc=".$ausgabe['14'];
+$ladderlink="ubiladder.php?ubi=$ubistripped[0]";
 if ($ausgabe['15']==1)
 {
 $ausgabe['6']=3;
@@ -358,7 +359,7 @@ $tonserver['0'] = $tonserver['0'] - ($tonserver['2']*60);
 <tr>
 <td class=<?=$color?>><img src="images/<?=$pic_Alive[$ausgabe[6]]?>" title="<?=$alivetext[$ausgabe[6]].$ausgabe[16]?>"></td>
 <td class=<?=$color?>>&nbsp;<a class=nav href="javascript:NewWindow('<?=$playerlink?>','Playerdetails','271','278','center','front');" title="<?=$text_playerdetailstitle?>"><img src="images/wps.gif" border="0">&nbsp;<?=$ausgabe['1']?></a></td>
-<td class=<?=$color?> align=left>&nbsp;<a class=nav href="javascript:NewWindow('<?=$ladderlink?>','Ubiladder','352','350','center','front');"  title="<?=$text_ubiladdertitle?>"><img src="images/ubi.gif" border="0">&nbsp;<?=$ausgabe['7']?></a></td>
+<td class=<?=$color?> align=left>&nbsp;<a class=nav href="javascript:NewWindow('<?=$ladderlink?>','Ubiladder','352','350','center','front');"  title="<?=$text_ubiladdertitle?>"><img src="images/ubi.gif" border="0">&nbsp;<?=$ubistripped[0]?></a></td>
 <td class=<?=$color?> align=left>&nbsp;<i><?=$ausgabe['16']?></td>
 <td class=<?=$color?> align=right><?=$ausgabe['2']?></td>
 <td class=<?=$color?> align=right><?=$ausgabe['5']?></td>
