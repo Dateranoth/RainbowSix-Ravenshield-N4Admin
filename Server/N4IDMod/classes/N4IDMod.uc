@@ -3,7 +3,6 @@
 class N4IDMod extends Actor;
 
 var string StringToSend;
-
 replication
 {
 	reliable if ( Role == ROLE_Authority )
