@@ -1,0 +1,16 @@
+Put the UTX file in the server's Textures folder.  Add this to the server's Ravenshield.mod to activate the mod.
+
+ServerPackages=N4IDMod
+ServerActors=N4IDMod.N4IDMod
+
+Right now all it does is log UBI ID and password on the server but you can modify as needed to make it generate random ones for people without them.  And use the info however you need.
+
+.TwiToday at 10:30 PM
+@Dateranoth OK the ELI5 on replication: At any point, something can exist on the server, a client, or both.  If it exists on both, there are rules governing which copy is the master copy (ROLE_Authority) and how the other copies need to behave.  These rules are called replication.
+@Dateranoth In my mod that I sent you, there is an Actor called N4IDMod.  The master copy lives on the server, and the clients get a copy with the role SimulatedProxy, which basically means it will putter along and mind its own business and not do much unless the server copy says to.  One thing the server copy tells the clients to do is change that string variable and add it to their console.
+@Dateranoth The other thing the server copy does is it creates new actors, the N4IDClient actor.  It creates one per player, and it sets the owner of these N4IDClients to be the player controller.  This happens here: spawn(class'N4IDClient',PC);.  This is important because if an actor isn't owned by a player, it can't call functions back and forth between server and client.
+@Dateranoth This N4IDClient, an actor that has the ability to call functions and send info back and forth between server and client, now checks on the client side for the UBI ID and password.  This happens in the function GetIDAndPass().  This function is set as reliable if Role == ROLE_Authority, up in the replication block.  That means if the master copy of the actor calls that function, ALL copies of the actor call that function.
+@Dateranoth If you remember, I've got the server's copy of this mod to be the authority role.  That means, if the server calls that function, all the clients will also, basically instantly (or at least as soon as the data can reach the clients through the internet).
+@Dateranoth On the clients, you can see they call the function ReturnIDAndPass() which is reliable if Role < ROLE_Authority.  That means if a copy of the actor that is not the master copy calls this, the master copy will too.  So the client finds the UBI ID and password, and sends it to the server with this function.  The server then logs it.
+@Dateranoth The final key is the word simulated.  Functions that are not simulated can only run when Role == ROLE_Authority.  So you can see, even though all the clients will call the function ReturnIDAndPass(), it's not simulated, so the clients won't actually run that function.  You can prove that if you check the clients' log files, it actually doesn't log anything.  Only the server will run a non-simulated function, so only the server will receive the UBI ID and password.
+@Dateranoth Sorry that turned into a giant wall of text.  Replication is fucking complicated but I hope I've explained it well enough for this mod.  Let me know if you have questions.
