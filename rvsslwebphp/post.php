@@ -52,39 +52,14 @@ if (isset($_POST))
 
 	while (isset($Ubi[$counter]))
 	{
-        $N4UserPass=explode("_",preg_replace("/\s+/", "", $Ubi[$counter]));
-        if (count($N4UserPass)==2 && $N4UserPass[0]!=='' && $N4UserPass[1]!=='')
-        {
-            $UbiID = $N4UserPass[0];
-            $UbiPass = $N4UserPass[1];
-        }
-        else
-        {
-            $UbiID = "Anonymous";
-            $UbiPass = "Pass";            
-        }       
-              
-		$look="SELECT id FROM ".$Playertable." WHERE serverident='".$ident."' and ubiname='".$UbiID."'";
-		$res=mysqli_query($db,$look);
-		if (mysqli_num_rows($res)>=1)
-        {
-            $look="SELECT id FROM ".$Playertable." WHERE serverident='".$ident."' and ubiname='".$UbiID."' and ubipass='".$UbiPass."'";
-            $res=mysqli_query($db,$look);
-            if (mysqli_num_rows($res)==0)
-            {
-                $UbiID = "Anonymous";
-                $UbiPass = "Pass";
-                $look="SELECT id FROM ".$Playertable." WHERE serverident='".$ident."' and ubiname='".$UbiID."'";
-                $res=mysqli_query($db,$look);
-            }    
-        }
-        
-        if (mysqli_num_rows($res)==0)
+		$look="SELECT id FROM ".$Playertable." WHERE serverident='".$ident."' and ubiname='".$Ubi[$counter]."'";
+		$res=mysql_query($look);
+		if (mysql_num_rows($res)==0)
 		{
-			$add="INSERT INTO ".$Playertable." VALUES('','".$ident."','".$UbiID."','".$UbiPass."')";
-			$res = mysqli_query($db,$add);
-			$look="SELECT id FROM ".$Playertable." WHERE serverident='".$ident."' and ubiname='".$UbiID."'";
-			$res=mysqli_query($db,$look);
+			$add="INSERT INTO ".$Playertable." VALUES('','".$ident."','".$Ubi[$counter]."')";
+			$res = mysql_query($add);
+			$look="SELECT id FROM ".$Playertable." WHERE serverident='".$ident."' and ubiname='".$Ubi[$counter]."'";
+			$res=mysql_query($look);
 		}
         
 		$dbrow=mysqli_fetch_array($res);

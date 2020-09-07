@@ -345,9 +345,9 @@ if ($GameModeTranslate[$dataarray['F1']]=="pilot" or $GameModeTranslate[$dataarr
 if ($ausgabe['0']=="3") {$color="red";}
 if ($ausgabe['0']=="2") {$color="green";}
 }
-$ubistripped=explode("_",$ausgabe['7']);
-$playerlink="playerdetail.php?nick=".base64_encode($ausgabe['1'])."&Ubi=".base64_encode($ubistripped[0])."&PWpn=".$ausgabe['8']."&SWpn=".$ausgabe['9']."&PWpnG=".$ausgabe['10']."&SWpnG=".$ausgabe['11']."&Hits=".$ausgabe['12']."&Fired=".$ausgabe['13']."&Kills=".$ausgabe['2']."&Deaths=".$ausgabe['5']."&Acc=".$ausgabe['14'];
-$ladderlink="ubiladder.php?ubi=$ubistripped[0]";
+$N4ID=$ausgabe['7'];
+$playerlink="playerdetail.php?nick=".base64_encode($ausgabe['1'])."&Ubi=".base64_encode($N4ID)."&PWpn=".$ausgabe['8']."&SWpn=".$ausgabe['9']."&PWpnG=".$ausgabe['10']."&SWpnG=".$ausgabe['11']."&Hits=".$ausgabe['12']."&Fired=".$ausgabe['13']."&Kills=".$ausgabe['2']."&Deaths=".$ausgabe['5']."&Acc=".$ausgabe['14'];
+$ladderlink="ubiladder.php?ubi=$N4ID";
 if ($ausgabe['15']==1)
 {
 $ausgabe['6']=3;
@@ -359,7 +359,7 @@ $tonserver['0'] = $tonserver['0'] - ($tonserver['2']*60);
 <tr>
 <td class=<?=$color?>><img src="images/<?=$pic_Alive[$ausgabe[6]]?>" title="<?=$alivetext[$ausgabe[6]].$ausgabe[16]?>"></td>
 <td class=<?=$color?>>&nbsp;<a class=nav href="javascript:NewWindow('<?=$playerlink?>','Playerdetails','271','278','center','front');" title="<?=$text_playerdetailstitle?>"><img src="images/wps.gif" border="0">&nbsp;<?=$ausgabe['1']?></a></td>
-<td class=<?=$color?> align=left>&nbsp;<a class=nav href="javascript:NewWindow('<?=$ladderlink?>','Ubiladder','352','350','center','front');"  title="<?=$text_ubiladdertitle?>"><img src="images/ubi.gif" border="0">&nbsp;<?=$ubistripped[0]?></a></td>
+<td class=<?=$color?> align=left>&nbsp;<a class=nav href="javascript:NewWindow('<?=$ladderlink?>','Ubiladder','352','350','center','front');"  title="<?=$text_ubiladdertitle?>"><img src="images/ubi.gif" border="0">&nbsp;<?=$N4ID?></a></td>
 <td class=<?=$color?> align=left>&nbsp;<i><?=$ausgabe['16']?></td>
 <td class=<?=$color?> align=right><?=$ausgabe['2']?></td>
 <td class=<?=$color?> align=right><?=$ausgabe['5']?></td>
