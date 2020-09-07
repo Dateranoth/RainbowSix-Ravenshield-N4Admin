@@ -11,8 +11,6 @@ replication
 {
     reliable if ( Role == ROLE_Authority )
         GetIDAndPass;
-    reliable if ( Role == ROLE_Authority )
-        NotifyPlayer;
     reliable if ( Role < ROLE_Authority )
         VerifyN4IDAndPass;
 }
@@ -63,22 +61,6 @@ simulated function GetIDAndPass()
     }
 }
 
-//Notify Player if they logged in successfully or not.
-//If not, tell player the unique string appended to their name.
-simulated function NotifyPlayer(string sFromClient, string sFromServer)
-{
-    if ( sFromClient == sFromServer )
-    {
-        log("Successfully Logged in to server as"@sFromServer);
-        AddMessageToConsole("Successfully Logged in to server as"@sFromServer,class'Canvas'.static.MakeColor(0,255,0)); 
-    }
-    else
-    {
-        log("Login Failed. Using Temporary Name"@sFromServer);
-        AddMessageToConsole("Login Failed. Using Temporary Name"@sFromServer,class'Canvas'.static.MakeColor(0,255,0));
-    }  
-}
-
 //server receives this info from the client
 //Check UserID and Password. Update UbiID based on this information.
 function VerifyN4IDAndPass(string sName,string sID,string sPass, R6PlayerController PC)
@@ -92,6 +74,10 @@ function VerifyN4IDAndPass(string sName,string sID,string sPass, R6PlayerControl
     {
         log("ERROR - N4IDMod - UserID parameters("@UserID.Length@")and User Key parameters("@UserKey.Length@")and User Salt parameters("@Usersalt.Length@")are not the same length. Please reset N4IDList.ini or remove mismatching ID||Key||Salt.");
         PC.PlayerReplicationInfo.m_szUbiUserID = sName$"_"$GenerateSalt(8);
+        
+        PC.ClientMessage("Login Failed for User:"@sID@"due to N4IDMod setup problem");
+        PC.ClientMessage("Stats will be logged with the following UserID:"@PC.PlayerReplicationInfo.m_szUbiUserID);
+        PC.ClientMessage("Please Notify Server Owner");
     }
     else
     {
@@ -103,12 +89,18 @@ function VerifyN4IDAndPass(string sName,string sID,string sPass, R6PlayerControl
                 if (UserKey[i] == class'SHA1Hash'.static.GetStringHashString(sPass $ UserSalt[i]))
                 {
                     PC.PlayerReplicationInfo.m_szUbiUserID = sID;
-                    log("Login Accepted for User:"@sID);                    
+                    log("Login Accepted for User:"@sID);
+                    PC.ClientMessage("Login Accepted for User:"@sID);
                 }
                 else
                 {
                     PC.PlayerReplicationInfo.m_szUbiUserID =  sName$"_"$GenerateSalt(8);
                     log("Login Failed for User"@sID@"Generated Temp Name"@PC.PlayerReplicationInfo.m_szUbiUserID);
+                    
+                    PC.ClientMessage("Login Failed (incorrect password or name already taken) for User:"@sID);
+                    PC.ClientMessage("Stats will be logged with the following name:"@PC.PlayerReplicationInfo.m_szUbiUserID);
+                    PC.ClientMessage("To correct, open RavenShield.ini and change the username in m_szUserID or correct the password in m_szSavedPwd");
+                    PC.ClientMessage("Otherwise, on next login another random identifier will be assigned");
                 }
                 bUserExists = true;
                 break;
@@ -122,9 +114,11 @@ function VerifyN4IDAndPass(string sName,string sID,string sPass, R6PlayerControl
             UserKey[UserKey.Length] = class'SHA1Hash'.static.GetStringHashString(sPass$sTSalt);
             PC.PlayerReplicationInfo.m_szUbiUserID = sID;
             log("Created New User:"@sID);
+            
+            PC.ClientMessage("Successfully Joined Server as new User:"@sID);
+            PC.ClientMessage("It is recommended you backup your password in RavenShield.ini under m_szSavedPwd");
         }
     }
-    NotifyPlayer(sID,PC.PlayerReplicationInfo.m_szUbiUserID); 
     SaveConfig();
 }
 
