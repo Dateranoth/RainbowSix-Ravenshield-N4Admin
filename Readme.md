@@ -1,6 +1,6 @@
 # N4Admin 160 - Updated to Work with OpenRVS and PHP 7.0+
+v1.21as PHP-Script (C) 2003,2004,2020 by =TSAF=Muschel (updated by Dateranoth) and released under GNU-GPL
 
-v1.21as PHP-Script (C) 2003,2004 by =TSAF=Muschel and released under GNU-GPL
 v1.0 N4IDMod (C) 2020 by Dateranoth, .Twi and released under GNU-GPL v3
 
 Powered by N4URLPost - Copyright 2003,2004 =TSAF=Muschel and Neo4E656F
