@@ -53,20 +53,20 @@ if (isset($_POST))
 	while (isset($Ubi[$counter]))
 	{
 		$look="SELECT id FROM ".$Playertable." WHERE serverident='".$ident."' and ubiname='".$Ubi[$counter]."'";
-		$res=mysql_query($look);
-		if (mysql_num_rows($res)==0)
+		$res=mysqli_query($db,$look);
+		if (mysqli_num_rows($res)==0)
 		{
 			$add="INSERT INTO ".$Playertable." VALUES('','".$ident."','".$Ubi[$counter]."')";
-			$res = mysql_query($add);
+			$res = mysqli_query($db,$add);
 			$look="SELECT id FROM ".$Playertable." WHERE serverident='".$ident."' and ubiname='".$Ubi[$counter]."'";
-			$res=mysql_query($look);
+			$res=mysqli_query($db,$look);
 		}
         
 		$dbrow=mysqli_fetch_array($res);
 		$dbubiid=$dbrow['id'];
 
 		$look="SELECT id FROM ".$Nicktable." WHERE fromid='".$dbubiid."' and nick='".$Nick[$counter]."'";
-		$res = mysqli_query ($db,$look);
+		$res = mysqli_query($db,$look);
 		if (mysqli_num_rows($res)==0)
 		{
 			$add="INSERT INTO ".$Nicktable." VALUES ('','".$dbubiid."','".$Nick[$counter]."')";

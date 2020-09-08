@@ -37,8 +37,9 @@ $step='1';
 <b><u>Step 1</u></b>
 <br><br>
 Updated for Athena Sword by Munkey (ravenshield.theplatoon.com), Neo4E656F (www.koalaclaw.com) and Wizard (www.smakclan.com)
+Updated to work with PHP 7.0+ amd removed reference to offline ubisoft servers by Dateranoth - 2020
 <br><br>
-Welcome to the RavenShield Serverlist V1.12 install Script.<br>(Please open the config.inc.php file in a text editor and enter the correct information before.)
+Welcome to the RavenShield Serverlist V1.21as install Script.<br>(Please open the config.inc.php file in a text editor and enter the correct information before.)
 <br><hr><input type="hidden" name="step" value="2"><input type="submit" value="To Step 2"></form><hr>
 Serverlist for RainbowSix3 , Raven Shield by UBI-Soft<br>
 Copyright (C) 2003 =TSAF=Muschel<br>
@@ -226,7 +227,6 @@ mysqli_query($db,"CREATE TABLE ".$dbtable4."Player (
   id int(11) NOT NULL auto_increment,
   serverident varchar(20) NOT NULL default '',
   ubiname varchar(30) NOT NULL default '',
-  ubipass varchar(30) NOT NULL default '',
   PRIMARY KEY  (id),
   KEY serverident (serverident)
 )");
