@@ -1,11 +1,11 @@
-# N4Admin 160 Hot Fix
+# N4Admin 160 - Updated to Work with OpenRVS and PHP 7.0+
 
-v1.20as PHP-Script (C) 2003,2004 by =TSAF=Muschel and released under GNU-GPL
+v1.21as PHP-Script (C) 2003,2004 by =TSAF=Muschel and released under GNU-GPL
+v1.0 N4IDMod (C) 2020 by Dateranoth, .Twi and released under GNU-GPL v3
+
 Powered by N4URLPost - Copyright 2003,2004 =TSAF=Muschel and Neo4E656F
 
-This patch fixes incorrect stats being posted by the server.
-
-Just add the extra files in the "Server" folder to your server's main ravenshield directory.
+This has been modified to add a new mod (N4IDMod) that will allow each server to hold a list of unique users and passwords. This allows the orginal N4Admin Mod to properly save stats to a unique user along with their nicknames. The mod will automatically generate a user ID and password if none exists for the client. Changes were also made to remove the links to the dead ubi stats servers, and basic updates to allow th is to work with PHP 7.0+
 
 =============
 
